@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-sys.path.append('/home/wang/CARLA_0.9.6/carla-0.9.6-py3.5-linux-x86_64')
+sys.path.append('/home/wang/CARLA_0.9.6/PythonAPI/carla/dist/carla-0.9.6-py3.5-linux-x86_64.egg')
 
 import gym
 import gym_carla
@@ -14,8 +14,8 @@ from agents.navigation.basic_agent import BasicAgent
 def main():
     # parameters for the gym_carla environment
     params = {
-        'number_of_vehicles': 30,  #100,
-        'number_of_walkers': 0,
+        'number_of_vehicles': 100,  #100,
+        'number_of_walkers': 100,
         'display_size': 256,  # screen size of bird-eye render
         'max_past_step': 10,  #,1,  # the number of past steps to draw
         'dt': 0.05, #0.1,  # time interval between two frames
@@ -28,7 +28,7 @@ def main():
         'port': 2000,  # connection port
         'town': 'Town01',  # which town to simulate
         'task_mode': 'random',  # mode of the task, [random, roundabout (only for Town03)]
-        'max_time_episode': 1000,  # maximum timesteps per episode
+        'max_time_episode': 3000,  # maximum timesteps per episode
         'max_waypt': 12,  # maximum number of waypoints
         'obs_range': 32,  # observation range (meter)
         'lidar_bin': 0.125,  # bin size of lidar sensor (meter)
