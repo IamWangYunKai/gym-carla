@@ -1,15 +1,15 @@
 #!/usr/bin/env python
+CARLA_PATH = '/home/wang/CARLA_0.9.6/'
+
 import sys
-sys.path.append('/home/wang/CARLA_0.9.6/PythonAPI/carla/dist/carla-0.9.6-py3.5-linux-x86_64.egg')
-
-import gym
-import gym_carla
-
+sys.path.append(CARLA_PATH + 'PythonAPI/carla')
+sys.path.append(CARLA_PATH + 'PythonAPI/carla/dist/carla-0.9.6-py3.5-linux-x86_64.egg')
 import carla
-import cv2
-sys.path.append('/home/wang/CARLA_0.9.6/PythonAPI/carla')
 from agents.navigation.basic_agent import BasicAgent
 
+import cv2
+import gym
+import gym_carla
 
 def main():
     # parameters for the gym_carla environment
