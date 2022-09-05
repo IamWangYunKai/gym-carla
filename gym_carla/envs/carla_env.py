@@ -520,6 +520,16 @@ class CarlaEnv(gym.Env):
 
   def _get_obs(self):
     """Get the observations."""
+    self.birdeye_render.red_light = False
+    if self.ego.is_at_traffic_light():
+      traffic_light = self.ego.get_traffic_light()
+      if traffic_light.get_state() == carla.TrafficLightState.Red:
+        self.birdeye_render.red_light = True
+      else:
+        self.birdeye_render.red_light = False
+    else:
+      self.birdeye_render.red_light = False
+
     ## Birdeye rendering
     self.birdeye_render.vehicle_polygons = self.vehicle_polygons
     self.birdeye_render.walker_polygons = self.walker_polygons
@@ -570,17 +580,26 @@ class CarlaEnv(gym.Env):
     lidar[:,:,1] = np.array(lidar[:,:,1]>0, dtype=np.uint8)
     # Add the waypoints to lidar image
     if self.display_route:
-      wayptimg = (birdeye[:,:,0] <= 10) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 240)
+      # wayptimg = (birdeye[:,:,0] <= 10) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 240)
+      if self.birdeye_render.red_light:
+        wayptimg = (birdeye[:,:,0] <= 128) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 127)
+      else:
+        wayptimg = (birdeye[:,:,0] <= 10) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 240)
     else:
       wayptimg = birdeye[:,:,0] < 0  # Equal to a zero matrix
+    
     wayptimg = np.expand_dims(wayptimg, axis=2)
     wayptimg = np.fliplr(np.rot90(wayptimg, 3))
-
+    
     # Get the final lidar image
     lidar = np.concatenate((lidar, wayptimg), axis=2)
     lidar = np.flip(lidar, axis=1)
     lidar = np.rot90(lidar, 1)
     lidar = lidar * 255
+
+    if self.display_route and self.birdeye_render.red_light:
+      wayptimg = (birdeye[:,:,0] <= 128) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 127)
+      lidar[wayptimg] = (math.floor(0.5*255), 0, math.floor(0.5*255))
 
     # Display lidar image
     lidar_surface = rgb_to_display_surface(lidar, self.display_size)
