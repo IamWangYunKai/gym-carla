@@ -1,6 +1,15 @@
-# gym-carla
+#  gym-carla
 
 Fork from [https://github.com/cjy1992/gym-carla](https://github.com/cjy1992/gym-carla)
+
+#### New Features
+
+- [x] Change waypoints color according to the traffic light
+- [x] Boost control frequency from 10Hz to 20Hz, and update lidar's params
+- [x] Add AI driver
+- [x] Automatic data collection
+- [ ] Draw trajectory
+- [ ] Multi-agent control
 
 ## Install
 

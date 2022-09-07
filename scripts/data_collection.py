@@ -90,8 +90,8 @@ def save_data(index, obs, vehicle):
 def main():
     # parameters for the gym_carla environment
     params = {
-        'number_of_vehicles': 100,  #100,
-        'number_of_walkers': 100,
+        'number_of_vehicles': 50,
+        'number_of_walkers': 0,
         'display_size': 256,  # screen size of bird-eye render
         'max_past_step': 10,  #,1,  # the number of past steps to draw
         'dt': 0.05, #0.1,  # time interval between two frames
@@ -100,7 +100,7 @@ def main():
         'discrete_steer': [-0.2, 0.0, 0.2],  # discrete value of steering angles
         'continuous_accel_range': [-3.0, 3.0],  # continuous acceleration range
         'continuous_steer_range': [-0.3, 0.3],  # continuous steering angle range
-        'ego_vehicle_filter': 'vehicle.lincoln*',  # filter for defining ego vehicle
+        'ego_vehicle_filter': 'vehicle.bmw.grandtourer',  # filter for defining ego vehicle
         'port': 2000,  # connection port
         'town': 'Town01',  # which town to simulate
         'task_mode': 'random',  # mode of the task, [random, roundabout (only for Town03)]
