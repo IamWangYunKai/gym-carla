@@ -7,6 +7,7 @@
 
 from __future__ import division
 
+import cv2
 import copy
 import numpy as np
 import pygame
@@ -148,6 +149,35 @@ class CarlaEnv(gym.Env):
       x, y = np.meshgrid(np.arange(self.pixor_size), np.arange(self.pixor_size)) # make a canvas with coordinates
       x, y = x.flatten(), y.flatten()
       self.pixel_grid = np.vstack((x, y)).T
+
+    # Draw trajectory
+    self.trajectory = None
+
+  def add_traj(self, traj):
+    self.trajectory = traj
+
+  def clear_traj(self):
+    self.trajectory = None
+
+  def draw_traj(self, img):
+    if self.trajectory is None:
+      return img
+    
+    x = np.array(self.trajectory['x'])
+    y = np.array(self.trajectory['y'])
+    u = -x*8+160
+    v = -y*8+128
+    u = u.astype('int')
+    v = v.astype('int')
+
+    for i in range(len(u)-1):
+      x1 = v[i]
+      x2 = v[i+1]
+      y1 = u[i]
+      y2 = u[i+1]
+      cv2.line(img, (x1,y1), (x2,y2), (255,255,255), 2)
+
+    return img
 
   def reset(self):
     # Clear sensor objects  
@@ -559,8 +589,12 @@ class CarlaEnv(gym.Env):
           if abs(birdeye[i, j, 0] - 255)<20 and abs(birdeye[i, j, 1] - 0)<20 and abs(birdeye[i, j, 0] - 255)<20:
             roadmap[i, j, :] = birdeye[i, j, :]
 
+    render_birdeye = birdeye
+    if self.trajectory is not None:
+      render_birdeye = self.draw_traj(birdeye)
+
     # Display birdeye image
-    birdeye_surface = rgb_to_display_surface(birdeye, self.display_size)
+    birdeye_surface = rgb_to_display_surface(render_birdeye, self.display_size)
     self.display.blit(birdeye_surface, (0, 0))
 
     ## Lidar image generation
@@ -601,8 +635,13 @@ class CarlaEnv(gym.Env):
       wayptimg = (birdeye[:,:,0] <= 128) * (birdeye[:,:,1] <= 10) * (birdeye[:,:,2] >= 127)
       lidar[wayptimg] = (math.floor(0.5*255), 0, math.floor(0.5*255))
 
+    render_lidar = lidar
+    # wyh ???? no traj show ???
+    if self.trajectory is not None:
+      render_lidar = self.draw_traj(lidar)
+
     # Display lidar image
-    lidar_surface = rgb_to_display_surface(lidar, self.display_size)
+    lidar_surface = rgb_to_display_surface(render_lidar, self.display_size)
     self.display.blit(lidar_surface, (self.display_size, 0))
 
     ## Display camera image

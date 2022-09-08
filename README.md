@@ -8,7 +8,7 @@ Fork from [https://github.com/cjy1992/gym-carla](https://github.com/cjy1992/gym-
 - [x] Boost control frequency from 10Hz to 20Hz, and update lidar's params
 - [x] Add AI driver
 - [x] Automatic data collection
-- [ ] Draw trajectory
+- [x] Draw trajectory
 - [ ] Multi-agent control
 
 ## Install

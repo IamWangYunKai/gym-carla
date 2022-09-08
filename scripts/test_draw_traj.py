@@ -43,6 +43,12 @@ def main():
 
     # Set gym-carla environment
     env = gym.make('carla-v0', params=params)
+    traj = {
+        'x': [0,3,6,8,10,12,14,16,18,20],
+        'y': [0,2,3,4,5,6,6,6,6,6],
+    }
+    env.add_traj(traj)
+
     obs = env.reset()
 
     agent = BasicAgent(env.ego, target_speed=params['desired_speed'] * 3.6)
